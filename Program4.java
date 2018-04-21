@@ -11,7 +11,7 @@ public class Program4
     public static String machine, outputFormat;
     public static int states, inputs, outputs;
     /**
-     * hello
+     * This is a new comment.
      */
     public static void main(String[] args) {
         //parsing the command line inputs in the following format:
