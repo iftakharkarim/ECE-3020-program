@@ -41,7 +41,7 @@ public class Program4
         System.out.println("What should be the output format? Type 'graph' or 'table'.");
         input = "";
         while (!(input.equalsIgnoreCase("graph") || input.equalsIgnoreCase("table"))) {
-            input = in.nextLine();
+            input = in.next();
             if (!(input.equalsIgnoreCase("graph") || input.equalsIgnoreCase("table"))) {
                 System.out.println("Incorrect input. Try again.");
             } else {
