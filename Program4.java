@@ -34,9 +34,9 @@ public class Program4
         while (!input.equals("n")) {
             input = in.nextLine();
             String[] tokens = input.split(" ");
-            if (tokens[1].equalsIgnoreCase("state")) {
+            if (tokens[0].equalsIgnoreCase("state")) {
                 state.add(input.substring(input.indexOf(" ") + 1, input.length()));
-            } else if (tokens[1].equalsIgnoreCase("arc")) {
+            } else if (tokens[0].equalsIgnoreCase("arc")) {
                 arc.add(input.substring(input.indexOf(" ") + 1, input.length()));
             }
         }
