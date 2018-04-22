@@ -40,6 +40,9 @@ public class Program4
                 arc.add(input.substring(input.indexOf(" ") + 1, input.length()));
             }
         }
+        //Sort the lists in alphabetical order
+        Collections.sort(state, String.CASE_INSENSITIVE_ORDER);
+        Collections.sort(arc, String.CASE_INSENSITIVE_ORDER);
         System.out.println("What should be the output format? Type 'graph' or 'table'.");
         input = "";
         while (!(input.equalsIgnoreCase("graph") || input.equalsIgnoreCase("table"))) {
