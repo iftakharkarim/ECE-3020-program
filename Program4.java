@@ -43,6 +43,7 @@ public class Program4
         //Sort the lists in alphabetical order
         Collections.sort(state, String.CASE_INSENSITIVE_ORDER);
         Collections.sort(arc, String.CASE_INSENSITIVE_ORDER);
+
         System.out.println("What should be the output format? Type 'graph' or 'table'.");
         input = "";
         while (!(input.equalsIgnoreCase("graph") || input.equalsIgnoreCase("table"))) {
@@ -53,8 +54,9 @@ public class Program4
                 outputFormat = input;
             }
         }
+
         // generate all the possible input by the given #ofinput bits
-        int[] allInput = stateGenerator(inputs);
+        String[] allInput = stateGenerator(inputs);
 
         // check if there is any invalid state in the arc list
         arc = InvalidStateChecker(arc, state);
@@ -70,85 +72,143 @@ public class Program4
                 String temp = curArc.substring(0, curArc.indexOf(" "));
                 if(curState.equalsIgnoreCase(temp)) {
                     tempList.add(curArc);
-                    arc.remove(j);
                 }
             }
             extractedState.add(tempList);
         }
+
         // output the list according to the user's choice
         if(outputFormat.equalsIgnoreCase("graph")){
+            System.out.println("Output GRAPH: ");
             OutPutGraph(extractedState, allInput, state);
         } else {
+            System.out.println("Output TABLE ("+machine+" FSM) :");
             OutPutTable(extractedState, allInput, state);
         }
     }
-
+//----------------------------------------------------------------------------------------------------
     // generats all the possible input comination like 00,01,10.....
-    public static int[] stateGenerator(int numOfInputBits) {
-        int number = (int) Math.pow(numOfInputBits, 2);
-        int[] returnArray = new int[number];
+    public static String[] stateGenerator(int numOfInputBits) {
+        int l = 0;
+        int number = (int) Math.pow(2, numOfInputBits);
+        String[] returnArray = new String[number];
         for(int i = 0; i < number; i++) {
-            returnArray[i] = i;
+            String str = new String(Integer.toBinaryString(i));
+            if(str.length() < numOfInputBits){
+                l = numOfInputBits - str.length();
+                while(l != 0){
+                    str ="0"+str;
+                    l--;
+                }
+            }
+            returnArray[i] = str;
         }
         return returnArray;
     }
-
-    // this method check if there is any invalid state if so then remove that arc from the arc list
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    // this method check if there is any invalid state if so then update the arc-list by deleting that invalid arc
     public static ArrayList<String> InvalidStateChecker(ArrayList<String> arc, ArrayList<String> state) {
+        ArrayList<String> newArc = new ArrayList<>();
         for(int i = 0; i < arc.size(); i++) {
-            String[] array = arc.get(i).split(" ");
+            String str = arc.get(i);
+            boolean valid1 = false;
+            boolean valid2 = false;
+            String[] array = str.split(" ");
             for(int j = 0; j <state.size(); j++){
-                if(!array[0].equalsIgnoreCase(state.get(j))) {
-                    System.out.println("Output: % error state "+array[0]+" is not defined %");
-                    arc.remove(i);
-                } else if(!array[1].equalsIgnoreCase(state.get(j))){
-                    System.out.println("Output: % error state "+array[1]+" is not defined %");
-                    arc.remove(i);
+                String str2 = state.get(j);
+                if(array[1].equalsIgnoreCase(str2)) {
+                   valid1 = true; 
+                } 
+                if(array[0].equalsIgnoreCase(str2)){
+                    valid2 = true;
                 }
             }
+            if(valid1 && valid2){
+                newArc.add(str);
+            }
         }
-        return arc;
+
+        return newArc;
     }
 
+//=====================================================================================================================
     // takes the list and output it as a graph
-    public static void OutPutGraph(ArrayList<ArrayList<String>> list, int[] allInput, ArrayList<String> state) {
-        for(int i = 0; i < list.size(); i++) {
-            int count = 0, n =0, index = 0, uIndex = -1;
-            boolean temp = false;
-            ArrayList<String> tempList = list.get(i);
+    public static void OutPutGraph(ArrayList<ArrayList<String>> list, String[] allInput, ArrayList<String> state) {
+        for(int i = 0; i < state.size(); i++) {
             System.out.println(state.get(i));
-            //
-            for(int j = 0; j < tempList.size(); j++) {
-                //take the arc then split in into state, input, output
-                String[] array = tempList.get(j).split(" ");
-                System.out.println("  "+array[1]+ " "+array[2]+" / "+array[3]);
-                n = Integer.parseInt(array[2], 2);
-                //check if the input is among the generated input
-                for(int k = 0; k < allInput.length; k++) {
-                    if(n == allInput[k]){
-                        count++;
-                    }
-                    if(n!= allInput[k]){
-                        uIndex = allInput[k];
-                    }
-                }
-                if(count != 1) {
-                    index = j;
-                }
+            ArrayList<String> allExistenceInput = new ArrayList<>();
+            ArrayList<String> EachStateArcs = list.get(i);
+
+            for(int k = 0; k<EachStateArcs.size(); k++){
+                String[] array = EachStateArcs.get(k).split(" ");
+                allExistenceInput.add(array[2]);
+                System.out.println("  "+array[1]+" "+array[2]+"/"+array[3]);
             }
-            if(count > 1) {
-                String[] Tarray = tempList.get(index).split(" ");
-                System.out.println("%warning: input "+Tarray[2]+" was specified multiple times %");
-            }
-            if(uIndex >= 0) {
-                String s = Integer.toBinaryString(uIndex);
-                System.out.println("% warning: input "+s+"not specified %");
+
+            for(String s: allInput) {
+                boolean found = false;
+                int index = 0, count = 0;
+                for(int j = 0; j < allExistenceInput.size(); j++){
+                   if(s.equals(allExistenceInput.get(j))){
+                    found = true;
+                    count++;
+                   }
+                }
+
+                if(found && count >1){
+                    System.out.println("% warning: input "+s+" specified multiple times %");
+                } else if(!found){
+                    System.out.println("% warning: input "+s+" not specified %");
+                }
             }
         }
+                
     }
-    //output as Table depends on machine
-    public static void OutPutTable(ArrayList<ArrayList<String>> list, int[] allInput, ArrayList<String> state) {
-        System.out.println(list);
+
+//00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+    //output as Table depends 
+    public static void OutPutTable(ArrayList<ArrayList<String>> list, String[] allInput, ArrayList<String> state) {
+        String str = "";
+        String input ="";
+        System.out.println("Current |                       NextState/ Output");
+        for(String s: allInput){
+            str = str+"X =  "+s+"         ";
+        }
+
+        System.out.println("State   |"+str);
+        System.out.println("----------------------------------------------------------------------------");
+
+        for(int i = 0; i < state.size(); i++) {
+            String outputStr = state.get(i)+"    | ";
+            ArrayList<String> allExistenceInput = new ArrayList<>();
+            ArrayList<String> allExistenceOutput = new ArrayList<>();
+            ArrayList<String> EachStateArcs = list.get(i);
+            for(int k = 0; k<EachStateArcs.size(); k++){
+                String[] array = EachStateArcs.get(k).split(" ");
+                allExistenceInput.add(array[2]);
+                allExistenceOutput.add(array[1]+"/"+array[3]);
+            }
+
+            for(String s: allInput) {
+                boolean found = false;
+                int index = 0, count = 0;
+                for(int j = 0; j < allExistenceInput.size(); j++){
+                   if(s.equals(allExistenceInput.get(j))){
+                    found = true;
+                    index = j;
+                    count++;
+                   }
+                }
+                if(found && count == 1){
+                    outputStr = outputStr+allExistenceOutput.get(index)+"           ";
+                } else if(found && count>1){
+                    outputStr = outputStr+" error           ";
+                } else{
+                    outputStr = outputStr+" x / x           ";
+                }
+            }
+            System.out.println(outputStr);
+        }
     }
 
 }
