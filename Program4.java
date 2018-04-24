@@ -37,6 +37,7 @@ public class Program4
             if (tokens[0].equalsIgnoreCase("state")) {
                 state.add(input.substring(input.indexOf(" ") + 1, input.length()));
             } else if (tokens[0].equalsIgnoreCase("arc")) {
+                String invalid = "";
                 boolean valid[] ={false, false};
                 for (int i = 1; i < 3; i++) {
                     valid[i - 1] = false;
@@ -46,11 +47,14 @@ public class Program4
                             break;
                         }
                     }
+                    if (!valid[i-1]) {
+                        invalid = tokens[i];
+                    }
                 }
                 if (valid[0] && valid[1]) {
                     arc.add(input.substring(input.indexOf(" ") + 1, input.length()));
                 } else {
-                    System.out.println("%error: state not defined");
+                    System.out.println("%error: state '" + invalid + "' not defined");
                 }
             }
         }
