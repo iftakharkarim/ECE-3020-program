@@ -35,7 +35,7 @@ public class Program4
             input = in.nextLine();
             String[] tokens = input.split(" ");
             if (tokens[0].equalsIgnoreCase("state")) {
-                state.add(input.substring(input.indexOf(" ") + 1, input.length()));
+                state.add(input.substring(input.indexOf(" ") + 1, input.indexOf(" ", input.indexOf(" ") + 1)));
             } else if (tokens[0].equalsIgnoreCase("arc")) {
                 String invalid = "";
                 boolean valid[] ={false, false};
