@@ -225,7 +225,6 @@ public class Program4
                     outputStr = outputStr+" x / x           ";
                 }
             }
-            
             System.out.println(outputStr);
         }
     }
