@@ -1,4 +1,4 @@
-import java.util.Scanner;
+    import java.util.Scanner;
 import java.util.*;
 /**
  * Write a description of class Program4 here.
@@ -94,16 +94,24 @@ public class Program4
             extractedState.add(tempList);
         }
 
-        // output the list according to the user's choice
         if(outputFormat.equalsIgnoreCase("graph")){
             System.out.println("Output GRAPH: ");
-            OutPutGraph(extractedState, allInput, state);
+            if(machine.equalsIgnoreCase("mealy")){
+                OutPutGraphMelay(extractedState, allInput, state);
+            } else {
+                OutPutGraphMoore(extractedState, allInput, state);
+                System.out.println();
+            }
         } else {
             System.out.println("Output TABLE ("+machine+" FSM) :");
-            OutPutTable(extractedState, allInput, state);
+            if(machine.equalsIgnoreCase("mealy")) {
+                OutPutTableMelay(extractedState, allInput, state);
+            } else{
+                OutPutTableMoore(extractedState, allInput, state);
+            }
         }
     }
-//----------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------
     // generats all the possible input comination like 00,01,10.....
     public static String[] stateGenerator(int numOfInputBits) {
         int l = 0;
@@ -125,7 +133,7 @@ public class Program4
 
 //=====================================================================================================================
     // takes the list and output it as a graph
-    public static void OutPutGraph(ArrayList<ArrayList<String>> list, String[] allInput, ArrayList<String> state) {
+    public static void OutPutGraphMelay(ArrayList<ArrayList<String>> list, String[] allInput, ArrayList<String> state) {
         for(int i = 0; i < state.size(); i++) {
             System.out.println(state.get(i));
             ArrayList<String> allExistenceInput = new ArrayList<>();
@@ -157,9 +165,42 @@ public class Program4
                 
     }
 
+
+    //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    public static void OutPutGraphMoore(ArrayList<ArrayList<String>> list, String[] allInput, ArrayList<String> state) {
+        for(int i = 0; i < state.size(); i++) {
+            System.out.println(state.get(i));
+            ArrayList<String> allExistenceInput = new ArrayList<>();
+            ArrayList<String> EachStateArcs = list.get(i);
+
+            for(int k = 0; k<EachStateArcs.size(); k++){
+                String[] array = EachStateArcs.get(k).split(" ");
+                allExistenceInput.add(array[2]);
+                System.out.println("  "+array[1]+" "+array[2]);
+            }
+            
+            for(String s: allInput) {
+                boolean found = false;
+                int index = 0, count = 0;
+                for(int j = 0; j < allExistenceInput.size(); j++){
+                   if(s.equals(allExistenceInput.get(j))){
+                    found = true;
+                    count++;
+                   }
+                }
+                if(found && count >1){
+                    System.out.println("% warning: input "+s+" specified multiple times %");
+                } else if(!found){
+                    System.out.println("% warning: input "+s+" not specified %");
+                }
+            }
+        }
+                
+    }
+
 //00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
     //output as Table depends 
-    public static void OutPutTable(ArrayList<ArrayList<String>> list, String[] allInput, ArrayList<String> state) {
+    public static void OutPutTableMelay(ArrayList<ArrayList<String>> list, String[] allInput, ArrayList<String> state) {
         String str = "";
         String input ="";
         System.out.println("Current |                       NextState/ Output");
@@ -201,6 +242,54 @@ public class Program4
             }
             System.out.println(outputStr);
         }
+    }
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // output table as Moore machine                          \\\\\\\\\\\
+    public static void OutPutTableMoore(ArrayList<ArrayList<String>> list, String[] allInput, ArrayList<String> state) {
+        String str = "";
+        String input ="";
+        System.out.println("Current |                       NextState/ Output");
+        for(String s: allInput){
+            str = str+"X =  "+s+"         ";
+        }
+        System.out.println("State   |"+str);
+        System.out.println("----------------------------------------------------------------------------");
+
+        for(int i = 0; i < state.size(); i++) {
+            String outputStr = state.get(i)+"    | ";
+            ArrayList<String> allExistenceInput = new ArrayList<>();
+            ArrayList<String> allExistenceOutput = new ArrayList<>();
+            ArrayList<String> EachStateArcs = list.get(i);
+            for(int k = 0; k<EachStateArcs.size(); k++){
+            String[] array = EachStateArcs.get(k).split(" ");
+            allExistenceInput.add(array[2]);
+            allExistenceOutput.add(array[1]);
+            }
+
+            for(String s: allInput) {
+                boolean found = false;
+                int index = 0, count = 0;
+                for(int j = 0; j < allExistenceInput.size(); j++){
+                if(s.equals(allExistenceInput.get(j))){
+                    found = true;
+                    index = j;
+                    count++;
+                }
+                }
+                if(found && count == 1){
+                    outputStr = outputStr+allExistenceOutput.get(index)+"           ";
+                } else if(found && count>1){
+                    outputStr = outputStr+" error           ";
+                } else{
+                    outputStr = outputStr+"    x             ";
+                }
+            }
+            System.out.println(outputStr);
+        }
+        
     }
 
 }
