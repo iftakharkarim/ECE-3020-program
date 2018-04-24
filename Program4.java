@@ -37,7 +37,21 @@ public class Program4
             if (tokens[0].equalsIgnoreCase("state")) {
                 state.add(input.substring(input.indexOf(" ") + 1, input.length()));
             } else if (tokens[0].equalsIgnoreCase("arc")) {
-                arc.add(input.substring(input.indexOf(" ") + 1, input.length()));
+                boolean valid = false;
+                for (int i = 1; i < 3; i++) {
+                    valid = false;
+                    for (int j = 0; j < state.size(); j++) {
+                        if (tokens[i].equalsIgnoreCase(state.get(j))) {
+                            valid = true;
+                            break;
+                        }
+                    }
+                }
+                if (valid) {
+                    arc.add(input.substring(input.indexOf(" ") + 1, input.length()));
+                } else {
+                    System.out.println("%error: state not defined");
+                }
             }
         }
         //Sort the lists in alphabetical order
