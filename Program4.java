@@ -81,8 +81,16 @@ public class Program4
         /* extracting all the state and it's arc with output value from 
         *given input list
         */
+
         for( int i = 0; i < state.size(); i++) {
-            String curState = state.get(i);
+            String curState ="";
+            if(machine.equalsIgnoreCase("moore")) {
+                curState = state.get(i);
+                curState = curState.substring(0, curState.indexOf(" "));
+            } else {
+                curState = state.get(i);
+            }
+
             ArrayList<String> tempList = new ArrayList<>();
             for(int j = 0; j < arc.size(); j++) {
                 String curArc = arc.get(j);
@@ -94,8 +102,6 @@ public class Program4
             extractedState.add(tempList);
         }
 
-        System.out.println(extractedState);
-        
         if(outputFormat.equalsIgnoreCase("graph")){
             System.out.println("Output GRAPH: ");
             if(machine.equalsIgnoreCase("mealy")){
@@ -180,7 +186,6 @@ public class Program4
                 System.out.println("  "+array[1]+" "+array[2]);
             }
 
-            System.out.println(allExistenceInput.size());
             for(String s: allInput) {
                 boolean found = false;
                 int index = 0, count = 0;
@@ -253,15 +258,15 @@ public class Program4
     public static void OutPutTableMoore(ArrayList<ArrayList<String>> list, String[] allInput, ArrayList<String> state) {
         String str = "";
         String input ="";
-        System.out.println("Current |                       NextState/ Output");
+        System.out.println("Current        |                       NextState/ Output");
         for(String s: allInput){
             str = str+"X =  "+s+"         ";
         }
-        System.out.println("State   |"+str);
+        System.out.println("State(output)  |"+str);
         System.out.println("----------------------------------------------------------------------------");
 
         for(int i = 0; i < state.size(); i++) {
-            String outputStr = state.get(i)+"    | ";
+            String outputStr = state.get(i)+"         | ";
             ArrayList<String> allExistenceInput = new ArrayList<>();
             ArrayList<String> allExistenceOutput = new ArrayList<>();
             ArrayList<String> EachStateArcs = list.get(i);
@@ -275,22 +280,23 @@ public class Program4
                 boolean found = false;
                 int index = 0, count = 0;
                 for(int j = 0; j < allExistenceInput.size(); j++){
-                if(s.equals(allExistenceInput.get(j))){
-                    found = true;
-                    index = j;
-                    count++;
-                }
+                    if(s.equals(allExistenceInput.get(j))){
+                        found = true;
+                        index = j;
+                        count++;
+                    }
                 }
                 if(found && count == 1){
                     outputStr = outputStr+allExistenceOutput.get(index)+"           ";
                 } else if(found && count>1){
                     outputStr = outputStr+" error           ";
                 } else{
-                    outputStr = outputStr+"    x             ";
+                    outputStr = outputStr+"    xx             ";
                 }
             }
             System.out.println(outputStr);
-        }    
+        }
+        
     }
 
 }
