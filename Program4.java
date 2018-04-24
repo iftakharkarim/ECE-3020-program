@@ -2,7 +2,7 @@
 import java.util.*;
 /**
  * Write a description of class Program4 here.
- *here is my new code
+ *
  * @author (your name)
  * @version (a version number or a date)
  */
@@ -94,13 +94,14 @@ public class Program4
             extractedState.add(tempList);
         }
 
+        System.out.println(extractedState);
+        
         if(outputFormat.equalsIgnoreCase("graph")){
             System.out.println("Output GRAPH: ");
             if(machine.equalsIgnoreCase("mealy")){
                 OutPutGraphMelay(extractedState, allInput, state);
             } else {
                 OutPutGraphMoore(extractedState, allInput, state);
-                System.out.println();
             }
         } else {
             System.out.println("Output TABLE ("+machine+" FSM) :");
@@ -178,7 +179,8 @@ public class Program4
                 allExistenceInput.add(array[2]);
                 System.out.println("  "+array[1]+" "+array[2]);
             }
-            
+
+            System.out.println(allExistenceInput.size());
             for(String s: allInput) {
                 boolean found = false;
                 int index = 0, count = 0;
@@ -288,8 +290,7 @@ public class Program4
                 }
             }
             System.out.println(outputStr);
-        }
-        
+        }    
     }
 
 }
