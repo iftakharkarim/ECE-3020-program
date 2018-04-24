@@ -36,14 +36,15 @@ public class Program4
             input = in.nextLine();
             String[] tokens = input.split(" ");
             if (tokens[0].equalsIgnoreCase("state")) {
-                state.add(input.substring(input.indexOf(" ") + 1, input.indexOf(" ", input.indexOf(" ") + 1)));
+                state.add(input.substring(input.indexOf(" ") + 1, input.length()));
             } else if (tokens[0].equalsIgnoreCase("arc")) {
                 String invalid = "";
                 boolean valid[] ={false, false};
                 for (int i = 1; i < 3; i++) {
                     valid[i - 1] = false;
                     for (int j = 0; j < state.size(); j++) {
-                        if (tokens[i].equalsIgnoreCase(state.get(j))) {
+                        String[] processState = state.get(j).split(" ");
+                        if (tokens[i].equalsIgnoreCase(processState[0])) {
                             valid[i - 1] = true;
                             break;
                         }
