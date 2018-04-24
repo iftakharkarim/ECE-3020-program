@@ -10,6 +10,7 @@ public class Program4
 {
     public static String machine, outputFormat;
     public static int states, inputs, outputs;
+    
     /*
      *
      * 
@@ -76,9 +77,6 @@ public class Program4
         // generate all the possible input by the given #ofinput bits
         String[] allInput = stateGenerator(inputs);
 
-        // check if there is any invalid state in the arc list
-        arc = InvalidStateChecker(arc, state);
-
         /* extracting all the state and it's arc with output value from 
         *given input list
         */
@@ -122,31 +120,6 @@ public class Program4
             returnArray[i] = str;
         }
         return returnArray;
-    }
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    // this method check if there is any invalid state if so then update the arc-list by deleting that invalid arc
-    public static ArrayList<String> InvalidStateChecker(ArrayList<String> arc, ArrayList<String> state) {
-        ArrayList<String> newArc = new ArrayList<>();
-        for(int i = 0; i < arc.size(); i++) {
-            String str = arc.get(i);
-            boolean valid1 = false;
-            boolean valid2 = false;
-            String[] array = str.split(" ");
-            for(int j = 0; j <state.size(); j++){
-                String str2 = state.get(j);
-                if(array[1].equalsIgnoreCase(str2)) {
-                   valid1 = true; 
-                } 
-                if(array[0].equalsIgnoreCase(str2)){
-                    valid2 = true;
-                }
-            }
-            if(valid1 && valid2){
-                newArc.add(str);
-            }
-        }
-
-        return newArc;
     }
 
 //=====================================================================================================================
